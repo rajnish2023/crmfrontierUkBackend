@@ -15,6 +15,7 @@ const blogPostSchema = new mongoose.Schema(
     status: { type: String, enum: ['Draft', 'Published'], default: 'Draft' },
     readtimes: {type: String},
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    schema:[{ type: String }],
   },
   { timestamps: true }
 );

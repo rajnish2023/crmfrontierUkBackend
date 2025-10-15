@@ -33,7 +33,7 @@ const upload = multer({
 
 const createBlogPost = (req, res) => {
     const author = req.user;
-    const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status } = req.body;
+    const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status, schema } = req.body;
   
     const banner = req.files.banner ? req.files.banner[0] : null;
     const metaimage = req.files.metaimage ? req.files.metaimage[0] : null;
@@ -41,6 +41,8 @@ const createBlogPost = (req, res) => {
     if (!title || !slug || !excerpt || !content || !category || !author) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
+
+    const parsedSchema = typeof schema === 'string' ? JSON.parse(schema) : schema || [];
    
     // Calculate reading time
   const wordsPerMinute = 200;
@@ -62,7 +64,8 @@ const createBlogPost = (req, res) => {
       status,
       banner: banner ? banner.filename : '',    
       metaimage: metaimage ? metaimage.filename : '', 
-      readtimes: readTime
+      readtimes: readTime,
+      schema: parsedSchema
     });
   
     newPost.save()
@@ -146,8 +149,9 @@ const updateBlogPost = async (req, res) => {
   const author = req.user._id;
     try {
        
-      const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status } = req.body;
+      const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status,schema } = req.body;
   
+      const parsedSchema = typeof schema === 'string' ? JSON.parse(schema) : schema || [];
        
       if (!title || !slug || !content || !category || !author) {
         return res.status(400).json({ message: 'Missing required fields' });
@@ -186,7 +190,8 @@ const updateBlogPost = async (req, res) => {
           author: author,
           banner: banner || undefined,  
           metaimage: metaimage || undefined, 
-          readtimes: readTime
+          readtimes: readTime,
+          schema: parsedSchema
         },
         { new: true }  
       );
