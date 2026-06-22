@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
  
  
-const uploadPath = '/var/data/uploads';
+const uploadPath = '//uploads';
  
 
 if (!fs.existsSync(uploadPath)) {
