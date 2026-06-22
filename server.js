@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/var/data/uploads', express.static('/var/data/uploads'));
+app.use('/uploads', express.static('/var/data/uploads'));
 
 
 // Routes
