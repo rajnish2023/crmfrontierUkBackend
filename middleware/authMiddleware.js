@@ -27,4 +27,14 @@ const authUser = asyncHandler(async (req, res, next) => {
     }
 });
 
-module.exports = authUser;
+// Middleware to check user role
+const authorizeRole = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ message: `Access denied. Role '${req.user.role}' not authorized.` });
+        }
+        next();
+    };
+};
+
+module.exports = { authUser, authorizeRole };

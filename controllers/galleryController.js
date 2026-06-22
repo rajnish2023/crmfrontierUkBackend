@@ -35,7 +35,11 @@ const createGallery = asyncHandler(async (req, res) => {
         createdAt: new Date(),
     });
     await newGallery.save();
-    res.status(201).json({ message: 'Gallery created successfully' });
+    res.status(201).json({ 
+      message: 'Gallery created successfully',
+      filenames: newGallery.images,
+      urls: newGallery.images.map(name => `http://localhost:5000/uploads/${name}`)
+    });
 });
  
 module.exports = { getGalleries, createGallery, upload }; 

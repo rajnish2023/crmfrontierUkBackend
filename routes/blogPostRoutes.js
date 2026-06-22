@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const BlogPostController = require('../controllers/blogPostController');
 
-const authenticate = require('../middleware/authMiddleware');
+const { authUser: authenticate } = require('../middleware/authMiddleware');
 
 router.post('/blogpostcreate', BlogPostController.upload.fields([
     { name: 'banner', maxCount: 1 },  

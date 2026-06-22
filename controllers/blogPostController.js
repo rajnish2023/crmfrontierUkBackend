@@ -31,7 +31,7 @@ const upload = multer({
 
 // Create a new blog post with auth user 
 
-const createBlogPost = (req, res) => {
+const createBlogPost = async (req, res) => {
     const author = req.user;
     const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status, schema } = req.body;
   
@@ -40,6 +40,12 @@ const createBlogPost = (req, res) => {
   
     if (!title || !slug || !excerpt || !content || !category || !author) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Check if slug already exists
+    const existingPost = await BlogPost.findOne({ slug });
+    if (existingPost) {
+      return res.status(400).json({ error: 'Slug already exists. Please use a unique slug.' });
     }
 
     const parsedSchema = typeof schema === 'string' ? JSON.parse(schema) : schema || [];
@@ -68,9 +74,12 @@ const createBlogPost = (req, res) => {
       schema: parsedSchema
     });
   
-    newPost.save()
-      .then((post) => res.status(201).json(post))
-      .catch((error) => res.status(500).json({ error: 'Failed to create blog post', details: error }));
+    try {
+      const savedPost = await newPost.save();
+      res.status(201).json(savedPost);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to create blog post', details: error.message });
+    }
   };
 
 // Get all blog posts with auth user but when role is superadmin then fetch all blogs
@@ -155,6 +164,12 @@ const updateBlogPost = async (req, res) => {
        
       if (!title || !slug || !content || !category || !author) {
         return res.status(400).json({ message: 'Missing required fields' });
+      }
+
+      // Check if slug already exists for another post
+      const existingPost = await BlogPost.findOne({ slug, _id: { $ne: req.params.id } });
+      if (existingPost) {
+        return res.status(400).json({ message: 'Slug already exists. Please use a unique slug.' });
       }
   
        
