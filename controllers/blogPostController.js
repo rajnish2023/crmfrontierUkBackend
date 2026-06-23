@@ -71,7 +71,8 @@ const createBlogPost = async (req, res) => {
       banner: banner ? banner.filename : '',    
       metaimage: metaimage ? metaimage.filename : '', 
       readtimes: readTime,
-      schema: parsedSchema
+      schema: parsedSchema,
+      tags: req.body.tags ? (typeof req.body.tags === 'string' ? JSON.parse(req.body.tags) : req.body.tags) : [],
     });
   
     try {
@@ -158,7 +159,7 @@ const updateBlogPost = async (req, res) => {
   const author = req.user._id;
     try {
        
-      const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status,schema } = req.body;
+      const { title, slug, excerpt, content, category, metaTitle, metaDescription, metakeywords, status, tags,schema } = req.body;
   
       const parsedSchema = typeof schema === 'string' ? JSON.parse(schema) : schema || [];
        
@@ -206,7 +207,8 @@ const updateBlogPost = async (req, res) => {
           banner: banner || undefined,  
           metaimage: metaimage || undefined, 
           readtimes: readTime,
-          schema: parsedSchema
+          schema: parsedSchema,
+          tags: tags ? (typeof tags === 'string' ? JSON.parse(tags) : tags) : [],
         },
         { new: true }  
       );

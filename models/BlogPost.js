@@ -16,6 +16,7 @@ const blogPostSchema = new mongoose.Schema(
     readtimes: {type: String},
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     schema:[{ type: String }],
+    tags: [{ type: String }],
   },
   { timestamps: true }
 );
