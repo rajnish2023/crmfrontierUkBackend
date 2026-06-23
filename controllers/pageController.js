@@ -3,7 +3,7 @@ const Page = require('../models/Page');
 // Create a Page
 exports.createPage = async (req, res) => {
   try {
-    const { title, slug, content, status, metaTitle, metaDescription } = req.body;
+    const { title, slug, content, status, seo } = req.body;
     
     // Check if slug exists
     const existingPage = await Page.findOne({ slug });
@@ -11,7 +11,7 @@ exports.createPage = async (req, res) => {
       return res.status(400).json({ message: 'Slug already exists' });
     }
 
-    const newPage = new Page({ title, slug, content, status, metaTitle, metaDescription });
+    const newPage = new Page({ title, slug, content, status, seo });
     await newPage.save();
     
     res.status(201).json({ message: 'Page created successfully', page: newPage });
@@ -46,7 +46,7 @@ exports.getPageById = async (req, res) => {
 // Update Page
 exports.updatePage = async (req, res) => {
   try {
-    const { title, slug, content, status, metaTitle, metaDescription } = req.body;
+    const { title, slug, content, status, seo } = req.body;
     
     // Check if slug exists for another page
     if (slug) {
@@ -58,7 +58,7 @@ exports.updatePage = async (req, res) => {
 
     const updatedPage = await Page.findByIdAndUpdate(
       req.params.id,
-      { title, slug, content, status, metaTitle, metaDescription },
+      { title, slug, content, status, seo },
       { new: true }
     );
     

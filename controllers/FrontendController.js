@@ -1,6 +1,7 @@
 const Blog = require('../models/BlogPost');
 const BlogCategory = require('../models/BlogCategory'); 
 const User = require('../models/User');
+const Page = require('../models/Page');
 
 // Fetch all blogs with status published and populate author and category 
 
@@ -8,6 +9,30 @@ exports.getAllBlogs = async (req, res) => {
     try {
         const blogs = await Blog.find({ status: 'Published' }).populate('author').populate('category');
         res.status(200).json(blogs);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Fetch all published pages
+exports.getAllPages = async (req, res) => {
+    try {
+        const pages = await Page.find({ status: 'Published' }).sort({ createdAt: -1 });
+        res.status(200).json(pages);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Fetch published page by slug
+exports.getPageBySlug = async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const page = await Page.findOne({ slug, status: 'Published' });
+        if (!page) {
+            return res.status(404).json({ message: 'Page not found or not published' });
+        }
+        res.status(200).json(page);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

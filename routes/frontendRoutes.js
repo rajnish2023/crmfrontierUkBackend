@@ -6,6 +6,12 @@ const router = express.Router();
 // Route to fetch all blogs
 router.get('/blogs', BlogController.getAllBlogs);
 
+// Route to fetch all pages
+router.get('/pages', BlogController.getAllPages);
+
+// Route to fetch page details by slug
+router.get('/pages/:slug', BlogController.getPageBySlug);
+
 // Route to fetch blogs by category slug
 router.get('/blogs/category/:category', BlogController.getBlogByCategorySlug);
 

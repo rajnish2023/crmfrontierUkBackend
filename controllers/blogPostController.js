@@ -88,9 +88,9 @@ const BlogPostsAll = async (req, res) => {
       let blogPosts;
 
       if (req.user.role === 'superAdmin') {
-        blogPosts = await BlogPost.find().populate('category').populate('author');
+        blogPosts = await BlogPost.find().populate('category').populate('author').sort({ createdAt: -1 });
       } else {
-        blogPosts = await BlogPost.find({ author: req.user._id }).populate('category').populate('author');
+        blogPosts = await BlogPost.find({ author: req.user._id }).populate('category').populate('author').sort({ createdAt: -1 });
       }
 
       res.status(200).json(blogPosts);
